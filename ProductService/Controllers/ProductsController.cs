@@ -61,21 +61,14 @@ namespace ProductService.Controllers
 
                 if (documents != null)
                 {
-                    string docs = "[";
-                    bool first = true;
                     List<Product> productList = new List<Product>();
                     foreach (BsonDocument doc in documents)
                     {
                         Product P = BsonSerializer.Deserialize<Product>(doc);
                         P.CalculateCompleteness();
                         productList.Add(P);
-                        if (!first) docs += ",";
-                        docs += doc;
-                        first = false;
                     }
-                    docs += "]";
                     return JsonSerializer.Serialize(productList);
-                    return docs;
                 }
                 else
                 {
@@ -98,10 +91,17 @@ namespace ProductService.Controllers
 
                 var products = database.GetCollection<BsonDocument>("Products");
 
-                var product = products.Find(filter).FirstOrDefault();
-                if (product != null)
+                var documents = products.Find(filter).ToList();
+                if (documents != null)
                 {
-                    return product.ToString();
+                    List<Product> productList = new List<Product>();
+                    foreach (BsonDocument doc in documents)
+                    {
+                        Product P = BsonSerializer.Deserialize<Product>(doc);
+                        P.CalculateCompleteness();
+                        productList.Add(P);
+                    }
+                    return JsonSerializer.Serialize(productList);
                 }
                 else
                 {
@@ -115,16 +115,20 @@ namespace ProductService.Controllers
 
         }
         [HttpPost("addproduct")]
-        public int Post(string doc)
+        public async Task<string> Post(string doc)
         {
             try
             {
-                Product product = new Product(2, "Burger", "very nice", 1234, 2);
-                var text = BsonDocument.Parse(doc);
-                Console.WriteLine(text);
+                Product product = JsonSerializer.Deserialize<Product>(doc);
+                HttpClient client = new HttpClient();
+                int brandid = Convert.ToInt32(await client.GetStringAsync("https://1437675.luna.fhict.nl/brand/brands"));
+
                 var products = database.GetCollection<BsonDocument>("Products");
-                var obj = BsonSerializer.Deserialize<Product>(text);
+
+                
+
                 products.InsertOne(product.ToBsonDocument());
+
                 return 1;
             }
             catch(Exception ex)

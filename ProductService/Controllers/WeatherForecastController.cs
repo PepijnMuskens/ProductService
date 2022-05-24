@@ -42,7 +42,7 @@ namespace ProductService.Controllers
         [HttpGet("test")]
         public string Test()
         {
-            return "Het werkt";
+            return "Pog";
         }
     }
 }

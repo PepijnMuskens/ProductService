@@ -39,5 +39,10 @@ namespace ProductService.Controllers
 
             return string.Empty;
         }
+        [HttpGet("test")]
+        public string Test()
+        {
+            return "Het werkt";
+        }
     }
 }

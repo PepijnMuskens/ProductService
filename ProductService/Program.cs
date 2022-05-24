@@ -23,7 +23,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseMiddleware<AdminSafeListMiddleware>("145.93.76.86;51.116.145.38;10.0.0.7;192.168.1.5;::1;145.93.116.244");
+app.UseMiddleware<AdminSafeListMiddleware>("145.93.77.6;145.93.76.86;51.116.145.38;10.0.0.7;192.168.1.5;::1;145.93.116.244");
 //Gateway ip:       51.116.145.38
 //Brand service ip:     
 app.Run();

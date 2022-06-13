@@ -59,24 +59,12 @@ namespace ProductService.Controllers
                 var products = database.GetCollection<BsonDocument>("Products");
                 var documents = products.Find(new BsonDocument()).ToList();
                 List<Product> productList = new List<Product>();
+                List<object> list = new List<object>();
                 if (documents != null)
                 {
-                    
-                    foreach (BsonDocument doc in documents)
-                    {
-                        try
-                        {
-                            Product P = BsonSerializer.Deserialize<Product>(doc);
-                            P.CalculateCompleteness();
-                            productList.Add(P);
-                        }
-                        catch
-                        {
-                            //go on
-                        }
-                        
-                    }
-                    return System.Text.Json.JsonSerializer.Serialize(productList);
+
+                    var dotNetObjList = documents.ConvertAll(BsonTypeMapper.MapToDotNetValue);
+                    return System.Text.Json.JsonSerializer.Serialize(dotNetObjList);
                 }
                 else
                 {

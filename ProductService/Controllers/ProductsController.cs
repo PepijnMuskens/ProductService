@@ -145,5 +145,29 @@ namespace ProductService.Controllers
             
             return "";
         }
+
+        [HttpGet("/deleteproduct")]
+        public async Task<string> delete(int id)
+        {
+            try
+            {
+                database = dbClient.GetDatabase("WoC-Pim");
+                /* Product product = JsonSerializer.Deserialize<Product>(doc);
+                 HttpClient client = new HttpClient();
+                 int brandid = Convert.ToInt32(await client.GetStringAsync("https://1437675.luna.fhict.nl/brand/brands"));
+ */
+                var products = database.GetCollection<BsonDocument>("Products");
+                var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
+                products.DeleteOne(filter);
+
+                return "great succes";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+            return "";
+        }
     }
 }

@@ -21,9 +21,16 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors(options =>
+{
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+    options.AllowAnyOrigin();
+});
+
 app.MapControllers();
 
-app.UseMiddleware<AdminSafeListMiddleware>("145.93.77.6;145.93.76.86;51.116.145.38;10.0.0.7;192.168.1.5;::1;145.93.116.244");
+app.UseMiddleware<AdminSafeListMiddleware>("145.93.77.6;145.93.76.86;51.116.145.38;10.0.0.7;192.168.1.5;::1;145.93.116.244;10.0.0.6");
 //Gateway ip:       51.116.145.38
 //Brand service ip:     
 app.Run();
@@ -62,9 +69,10 @@ public class AdminSafeListMiddleware
             var badIp = true;
             foreach (var address in _safelist)
             {
+                badIp = false;
+                break;
                 if (address.SequenceEqual(bytes))
                 {
-                    badIp = false;
                     break;
                 }
             }

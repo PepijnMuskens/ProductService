@@ -84,21 +84,15 @@ namespace ProductService.Controllers
             try
             {
                 database = dbClient.GetDatabase("WoC-Pim");
-                var filter = Builders<BsonDocument>.Filter.Eq("Brand", brand);
+                var filter = Builders<BsonDocument>.Filter.Eq("partner", brand);
 
                 var products = database.GetCollection<BsonDocument>("Products");
 
                 var documents = products.Find(filter).ToList();
                 if (documents != null)
                 {
-                    List<Product> productList = new List<Product>();
-                    foreach (BsonDocument doc in documents)
-                    {
-                        Product P = BsonSerializer.Deserialize<Product>(doc);
-                        P.CalculateCompleteness();
-                        productList.Add(P);
-                    }
-                    return System.Text.Json.JsonSerializer.Serialize(productList);
+                    var dotNetObjList = documents.ConvertAll(BsonTypeMapper.MapToDotNetValue);
+                    return System.Text.Json.JsonSerializer.Serialize(dotNetObjList);
                 }
                 else
                 {

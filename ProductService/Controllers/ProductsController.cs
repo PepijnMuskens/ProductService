@@ -14,17 +14,16 @@ namespace ProductService.Controllers
     public class ProductsController : ControllerBase
     {
         private IMongoDatabase database;
-        private MongoClient dbClient;
+        private readonly MongoClient dbClient;
 
         public ProductsController()
         {
-            //MongoClient dbClient = new MongoClient("mongodb+srv://WoCPim:Pim654321@cluster0.juyb1.mongodb.net");
             dbClient = new MongoClient("mongodb+srv://Server:1234@cluster0.adbqh.mongodb.net/test");
+            database = dbClient.GetDatabase("WoC-Pim");
         }
         [HttpGet("/product")]
         public string Get(string name)
         {
-            database = dbClient.GetDatabase("WoC-Pim");
             try
             {
                 var filter = Builders<BsonDocument>.Filter.Eq("Name", name);
@@ -55,11 +54,8 @@ namespace ProductService.Controllers
         {
             try
             {
-                database = dbClient.GetDatabase("WoC-Pim");
                 var products = database.GetCollection<BsonDocument>("Products");
                 var documents = products.Find(new BsonDocument()).ToList();
-                List<Product> productList = new List<Product>();
-                List<object> list = new List<object>();
                 if (documents != null)
                 {
 
@@ -83,7 +79,6 @@ namespace ProductService.Controllers
 
             try
             {
-                database = dbClient.GetDatabase("WoC-Pim");
                 var filter = Builders<BsonDocument>.Filter.Eq("partner", brand);
 
                 var products = database.GetCollection<BsonDocument>("Products");
@@ -110,11 +105,6 @@ namespace ProductService.Controllers
         {
             try
             {
-                database = dbClient.GetDatabase("WoC-Pim");
-                /* Product product = JsonSerializer.Deserialize<Product>(doc);
-                 HttpClient client = new HttpClient();
-                 int brandid = Convert.ToInt32(await client.GetStringAsync("https://1437675.luna.fhict.nl/brand/brands"));
- */
                 var products = database.GetCollection<BsonDocument>("Products");
                 products.InsertOne(BsonDocument.Parse(doc));
 
@@ -133,11 +123,6 @@ namespace ProductService.Controllers
         {
             try
             {
-                database = dbClient.GetDatabase("WoC-Pim");
-                /* Product product = JsonSerializer.Deserialize<Product>(doc);
-                 HttpClient client = new HttpClient();
-                 int brandid = Convert.ToInt32(await client.GetStringAsync("https://1437675.luna.fhict.nl/brand/brands"));
- */
                 var products = database.GetCollection<BsonDocument>("Products");
                 var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
                 products.DeleteOne(filter);

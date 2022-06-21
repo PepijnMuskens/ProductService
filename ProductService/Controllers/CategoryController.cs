@@ -14,17 +14,16 @@ namespace ProductService.Controllers
     public class CategoryController : ControllerBase
     {
         private IMongoDatabase database;
-        private MongoClient dbClient;
+        private readonly MongoClient dbClient;
 
         public CategoryController()
         {
-            //MongoClient dbClient = new MongoClient("mongodb+srv://WoCPim:Pim654321@cluster0.juyb1.mongodb.net");
             dbClient = new MongoClient("mongodb+srv://Server:1234@cluster0.adbqh.mongodb.net/test");
+            database = dbClient.GetDatabase("WoC-Pim");
         }
         [HttpGet("/category")]
         public string Get(string name)
         {
-            database = dbClient.GetDatabase("WoC-Pim");
             try
             {
                 var filter = Builders<BsonDocument>.Filter.Eq("Name", name);
@@ -53,7 +52,7 @@ namespace ProductService.Controllers
         {
             try
             {
-                database = dbClient.GetDatabase("WoC-Pim");
+                
                 var categories = database.GetCollection<BsonDocument>("Categories");
                 var documents = categories.Find(new BsonDocument()).ToList();
                 List<Category> categoryList = new List<Category>();

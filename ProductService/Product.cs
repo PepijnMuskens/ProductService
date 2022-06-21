@@ -27,12 +27,22 @@ namespace ProductService
         {
             double total = 4;
             double filled = 0;
-            if (this.name != "") filled++;
-            if (this.description != "") filled++;
-            if (EAN != 0) filled++;
-            if (this.category != 0) filled++;
-
-            System.Reflection.PropertyInfo[] props = Atributes.GetType().GetProperties();
+            if (this.name != "")
+            {
+                filled++;
+            }
+            if (this.description != "")
+            {
+                filled++;
+            }
+            if (EAN != 0)
+            {
+                filled++;
+            }
+            if (this.category != 0)
+            {
+                filled++;
+            }
             
             Completeness = 100 * (filled / total);
         }

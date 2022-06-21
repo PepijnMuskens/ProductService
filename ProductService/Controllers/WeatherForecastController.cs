@@ -34,7 +34,9 @@ namespace ProductService.Controllers
             foreach (IPAddress address in ipHostInfo.AddressList)
             {
                 if (address.AddressFamily == AddressFamily.InterNetwork)
+                {
                     return address.ToString();
+                }
             }
 
             return string.Empty;
